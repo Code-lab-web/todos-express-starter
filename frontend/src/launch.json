@@ -1,0 +1,68 @@
+{
+  "weatherApiUrl": "https://pro.openweathermap.org/data/2.5/forecast/climate?lat={lat}&lon={lon}&appid={API key}",
+  "weatherApiUrlByCity": "https://pro.openweathermap.org/data/2.5/forecast/climate?q={city name},{country code}&appid={API key}",
+  "weatherApiUrlLondon": "https://pro.openweathermap.org/data/2.5/forecast/climate?q=London&appid={API key}",
+  "weatherApiUrlByCityId": "https://pro.openweathermap.org/data/2.5/forecast/climate?id={city ID}&appid={API key}",
+  "weatherApiUrlByCityIdExample": "https://pro.openweathermap.org/data/2.5/forecast/climate?id=2643743&appid={API key}",
+  "weatherApiUrlByZip": "https://pro.openweathermap.org/data/2.5/forecast/climate?zip={zip code},{country code}&appid={API key}",
+  "weatherApiUrlByZipExample": "https://pro.openweathermap.org/data/2.5/forecast/climate?zip=94040,us&appid={API key}",
+  "weatherApiUrlLondonCnt3": "https://api.openweathermap.org/data/2.5/forecast/climate?q=London&cnt=3",
+  "weatherApiUrlLondonExample": "https://api.openweathermap.org/data/2.5/forecast/climate?q=London",
+  "weatherApiUrlLondonMetric": "https://api.openweathermap.org/data/2.5/forecast/climate?q=London&units=metric",
+  "api.openweathermap.org/data/2.5/forecast/climate?q=London&units=imperial": "",
+  "weatherApiUrlByCityLang": "http://api.openweathermap.org/data/2.5/forecast/climate?id=524901&lang={lang}",
+  "weatherApiUrlByCityLangZhCn": "http://api.openweathermap.org/data/2.5/forecast/climate?id=524901&lang=zh_cn",
+  "api.openweathermap.org/data/2.5/forecast/climate?q=London,uk&callback=test": "",
+
+  "response": {
+    "cod": "200",
+    "city": {
+      "id": 2643743,
+      "name": "London",
+      "coord": {
+        "lon": -0.1277,
+        "lat": 51.5073
+      },
+      "country": "GB"
+    },
+    "message": 0.353472054,
+    "list": [
+      {
+        "dt": 1594382400,
+        "sunrise": 1594353335,
+        "sunset": 1594412149,
+        "temp": {
+          "day": 286.98,
+          "min": 285.22,
+          "max": 287.97,
+          "night": 285.22,
+          "eve": 287.97,
+          "morn": 287.29
+        },
+        "feels_like": {
+          "day": 282.61,
+          "night": 283.19,
+          "eve": 284.98,
+          "morn": 282.68
+        },
+        "pressure": 1016,
+        "humidity": 84,
+        "weather": [
+          {
+            "id": 500,
+            "main": "Rain",
+            "description": "light rain",
+            "icon": "10d"
+          }
+        ],
+        "speed": 6.78,
+        "deg": 320,
+        "clouds": 81,
+        "rain": 1.96
+      }
+    ]
+  }
+}
+ 
+                     
+                  
