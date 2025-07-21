@@ -5,18 +5,17 @@
     "postinstall": "npm install --prefix backend"
   },
   "dependencies": {
-<<<<<<< HEAD
     "express": "^5.1.0",
     "mongodb": "^6.17.0",
     "node.js": "^0.0.1-security",
     "react": "^19.1.0",
     "router": "^2.2.0",
     "zustand": "^5.0.5"
-=======
     "@mui/material": "^7.2.0",
     "@mui/styled-engine-sc": "^7.2.0",
     "react": "^19.1.0",
     "styled-components": "^6.1.19"
->>>>>>> 0419000 (Add dependencies for Material UI, React, and styled-components)
+    "leaflet": "^1.9.4",
+    "openlayers": "^3.17.1"
   }
 }
