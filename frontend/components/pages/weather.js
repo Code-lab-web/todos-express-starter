@@ -1,6 +1,21 @@
 const API_KEY = "548773e920254208b83a2e2bdadb8f0e";
 const body = document.getElementById("body");
 https://pro.openweathermap.org/data/2.5/forecast/climate?lat={lat}&lon={lon}&appid={548773e}
+"weatherApiUrl": "https://pro.openweathermap.org/data/2.5/forecast/climate?lat={lat}&lon={lon}&appid={API key}",
+  "weatherApiUrlByCity": "https://pro.openweathermap.org/data/2.5/forecast/climate?q={city name},{country code}&appid={API key}",
+  "weatherApiUrlLondon": "https://pro.openweathermap.org/data/2.5/forecast/climate?q=London&appid={API key}",
+  "weatherApiUrlByCityId": "https://pro.openweathermap.org/data/2.5/forecast/climate?id={city ID}&appid={API key}",
+  "weatherApiUrlByCityIdExample": "https://pro.openweathermap.org/data/2.5/forecast/climate?id=2643743&appid={API key}",
+  "weatherApiUrlByZip": "https://pro.openweathermap.org/data/2.5/forecast/climate?zip={zip code},{country code}&appid={API key}",
+  "weatherApiUrlByZipExample": "https://pro.openweathermap.org/data/2.5/forecast/climate?zip=94040,us&appid={API key}",
+  "weatherApiUrlLondonCnt3": "https://api.openweathermap.org/data/2.5/forecast/climate?q=London&cnt=3",
+  "weatherApiUrlLondonExample": "https://api.openweathermap.org/data/2.5/forecast/climate?q=London",
+  "weatherApiUrlLondonMetric": "https://api.openweathermap.org/data/2.5/forecast/climate?q=London&units=metric",
+  "api.openweathermap.org/data/2.5/forecast/climate?q=London&units=imperial": "",
+  "weatherApiUrlByCityLang": "http://api.openweathermap.org/data/2.5/forecast/climate?id=524901&lang={lang}",
+  "weatherApiUrlByCityLangZhCn": "http://api.openweathermap.org/data/2.5/forecast/climate?id=524901&lang=zh_cn",
+  "api.openweathermap.org/data/2.5/forecast/climate?q=London,uk&callback=test": "",
+
 
 
 
