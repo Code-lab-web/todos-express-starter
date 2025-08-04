@@ -1,3 +1,9 @@
+import React from 'react'
+import {Welcome} from './Welcome'
+import {About} from './About'
+import {Contact} from './Contact'
+import {Nav} from './Nav'
+export const App = () => {}
 import SGG from './SGG.png';
 import './App.css';
 import GardenCard from "./components/GardenCard"
