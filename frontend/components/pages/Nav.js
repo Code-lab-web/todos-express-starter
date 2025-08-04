@@ -1,12 +1,18 @@
 import 'react' from 'react'
+import {Link, Navlink,} from 'react-router-dom'
 export const Nav = () => {
-    return
-}
+    return(
 <nav>
-    <h1>Special Garden Group</h1>
+    <h1>
+    <Link to="/">/Link>Special Garden Group</link>
+    </h1>
     <ul>
-        <li>About</li>
-        <Li>Contact</Li>
+        <li>
+        <NavLink to="/about"></About>"></NavLink>
+        </li>
+        <<li><
+        <NavLink to ="/contact">Contact</NavLinkLink>
+        </li<
     </ul>
 </nav>
 )
