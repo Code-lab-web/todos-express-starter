@@ -7,7 +7,7 @@
     "dev": "nodemon server.js --exec babel-node"
   },
   "author": "Code-lab-web",
-  "license": "ISC",
+  "license": "(ISC OR GPL-3.0)",
   "dependencies": {
     "@babel/core": "^7.17.9",
     "@babel/node": "^7.16.8",
