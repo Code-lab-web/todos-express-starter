@@ -1,6 +1,9 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
+import express from 'express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import crypto from 'crypto'
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt-nodejs'
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl);
