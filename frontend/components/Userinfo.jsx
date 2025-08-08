@@ -4,9 +4,8 @@ export const UserInfo = () => {
 
 return (
     <div>
-        <h2> User Profile </h2>
+}        <h2> User Profile </h2>
         <p> User Name: {userName}></p>
         <p> Age: {age} </p>
     </div>
 ))
-}
