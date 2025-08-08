@@ -1,5 +1,7 @@
 {
   "name": "project-final-parent",
+  "author": "Code-lab-web",
+  "license": "(ISC OR GPL-3.0)",
   "version": "1.0.0",
   "scripts": {
     "postinstall": "npm install --prefix backend"
