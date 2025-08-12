@@ -14,11 +14,19 @@ body {
     margin-top: 105px;
 }
 
+
 h1 {
     font-size: 24px;
 }
 
 input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+input[type="text"]:focus {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -33,6 +41,13 @@ button {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+button:focus {
+ background-color: #0056b3; /* Darken background color */
+    outline: 2px solid #0056b3; /* Add a darker blue outline */
+
+
 }
 
 .weather-info {
