@@ -15,6 +15,7 @@
     # pkgs.sudo
     # pkgs.sudo-rs
     # pkgs.doas-sudo-shim
+    # pkgs.python312Packages.pip
   ];
 
   # Sets environment variables in the workspace
