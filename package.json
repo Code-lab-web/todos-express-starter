@@ -4,7 +4,10 @@
   "license": "(ISC OR GPL-3.0)",
   "version": "1.0.0",
   "scripts": {
-    "postinstall": "npm install --prefix backend"
+    "postinstall": "npm install --prefix backend",
+        "start": "yarn run v1.22.22"
+      }
+    }
   },
   "dependencies": {
     "express": "^5.1.0",
