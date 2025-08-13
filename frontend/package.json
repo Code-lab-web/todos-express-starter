@@ -9,7 +9,11 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
-    "start": "yarn"
+    "start": "babel-node server.js",
+    "dev": "nodemon server.js --exec babel-node"
+
+  },
+
   },
   "dependencies": {
     "react": "^18.2.0",
