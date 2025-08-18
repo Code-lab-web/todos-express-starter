@@ -16,6 +16,8 @@
     # pkgs.sudo-rs
     # pkgs.doas-sudo-shim
     # pkgs.python312Packages.pip
+    # pkgs.openssh
+    # pkgs.openshh_hpn
   ];
 
   # Sets environment variables in the workspace
