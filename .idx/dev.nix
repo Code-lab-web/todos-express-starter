@@ -18,6 +18,7 @@
     # pkgs.python312Packages.pip
     # pkgs.openssh
     # pkgs.openshh_hpn
+    # pkgs.openssh_gssapi
   ];
 
   # Sets environment variables in the workspace
