@@ -1,5 +1,49 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
+const blogSchema = new Schema({
+  title: String, // String is shorthand for {type: String}
+  author: String,
+  body: String,
+  comments: [{ body: String, date: Date }],
+  date: { type: Date, default: Date.now },
+  hidden: Boolean,
+  meta: {
+    votes: Number,
+    favs: Number
+  }
+});
+// getting-started.js
+const mongoose = require('mongoose');
+
+main().catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/test');
+
+  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+}
+const kittySchema = new mongoose.Schema({
+    name: String
+  });
+  const Kitten = mongoose.model('Kitten', kittySchema);
+  const silence = new Kitten({ name: 'Silence' });
+console.log(silence.name); // 'Silence'
+// NOTE: methods must be added to the schema before compiling it with mongoose.model()
+kittySchema.methods.speak = function speak() {
+    const greeting = this.name
+      ? 'Meow name is ' + this.name
+      : 'I don\'t have a name';
+    console.log(greeting);
+  };
+  
+  const Kitten = mongoose.model('Kitten', kittySchema);
+  const fluffy = new Kitten({ name: 'fluffy' });
+fluffy.speak(); // "Meow name is fluffy"
+await fluffy.save();
+fluffy.speak();
+const kittens = await Kitten.find();
+console.log(kittens);
+await Kitten.find({ name: /^fluff/ });
 
 const Blog = mongoose.model('Blog', blogSchema);
 // ready to go!
@@ -1594,47 +1638,1900 @@ const schema = new Schema({
     children: [new Schema({ name: 'string' })]
   });
 
-const blogSchema = new Schema({
-  title: String, // String is shorthand for {type: String}
-  author: String,
-  body: String,
-  comments: [{ body: String, date: Date }],
-  date: { type: Date, default: Date.now },
-  hidden: Boolean,
-  meta: {
-    votes: Number,
-    favs: Number
+  const Person = mongoose.model('Person', yourSchema);
+
+// find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
+const person = await Person.findOne({ 'name.last': 'Ghost' }, 'name occupation');
+// Prints "Space Ghost is a talk show host".
+console.log('%s %s is a %s.', person.name.first, person.name.last, person.occupation);
+// find each person with a last name matching 'Ghost'
+const query = Person.findOne({ 'name.last': 'Ghost' });
+
+// selecting the `name` and `occupation` fields
+query.select('name occupation');
+
+// execute the query at a later time
+const person = await query.exec();
+// Prints "Space Ghost is a talk show host."
+console.log('%s %s is a %s.', person.name.first, person.name.last, person.occupation);
+// With a JSON doc
+await Person.
+  find({
+    occupation: /host/,
+    'name.last': 'Ghost',
+    age: { $gt: 17, $lt: 66 },
+    likes: { $in: ['vaporizing', 'talking'] }
+  }).
+  limit(10).
+  sort({ occupation: -1 }).
+  select({ name: 1, occupation: 1 }).
+  exec();
+
+// Using query builder
+await Person.
+  find({ occupation: /host/ }).
+  where('name.last').equals('Ghost').
+  where('age').gt(17).lt(66).
+  where('likes').in(['vaporizing', 'talking']).
+  limit(10).
+  sort('-occupation').
+  select('name occupation').
+  exec();
+  const q = MyModel.updateMany({}, { isDeleted: true });
+
+await q.then(() => console.log('Update 2'));
+// Throws "Query was already executed: Test.updateMany({}, { isDeleted: true })"
+await q.then(() => console.log('Update 3'));
+const cursor = Person.find({ occupation: /host/ }).cursor();
+
+for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
+  console.log(doc); // Prints documents one at a time
+  for await (const doc of Person.find()) {
+    console.log(doc); // Prints documents one at a time
+  }
+  // MongoDB won't automatically close this cursor after 10 minutes.
+const cursor = Person.find().cursor().addCursorFlag('noCursorTimeout', true);
+const docs = await Person.aggregate([{ $match: { 'name.last': 'Ghost' } }]);
+const docs = await Person.aggregate([{ $match: { 'name.last': 'Ghost' } }]);
+
+docs[0] instanceof mongoose.Document; // false
+const doc = await Person.findOne();
+
+const idString = doc._id.toString();
+
+// Finds the `Person`, because Mongoose casts `idString` to an ObjectId
+const queryRes = await Person.findOne({ _id: idString });
+
+// Does **not** find the `Person`, because Mongoose doesn't cast aggregation
+// pipelines.
+const aggRes = await Person.aggregate([{ $match: { _id: idString } }]);
+const personSchema = new mongoose.Schema({
+  age: Number
+});
+
+const Person = mongoose.model('Person', personSchema);
+for (let i = 0; i < 10; i++) {
+  await Person.create({ age: i });
+}
+
+await Person.find().sort({ age: -1 }); // returns age starting from 10 as the first entry
+await Person.find().sort({ age: 1 }); // returns age starting from 0 as the first entry
+const personSchema = new mongoose.Schema({
+  age: Number,
+  name: String,
+  weight: Number
+});
+
+const Person = mongoose.model('Person', personSchema);
+const iterations = 5;
+for (let i = 0; i < iterations; i++) {
+  await Person.create({
+    age: Math.abs(2 - i),
+    name: 'Test' + i,
+    weight: Math.floor(Math.random() * 100) + 1
+  });
+}
+
+await Person.find().sort({ age: 1, weight: -1 }); // returns age starting from 0, but while keeping that order will then sort by weight.
+[
+  {
+    _id: new ObjectId('63a335a6b9b6a7bfc186cb37'),
+    age: 0,
+    name: 'Test2',
+    weight: 67,
+    __v: 0
+  },
+  {
+    _id: new ObjectId('63a335a6b9b6a7bfc186cb35'),
+    age: 1,
+    name: 'Test1',
+    weight: 99,
+    __v: 0
+  },
+  {
+    _id: new ObjectId('63a335a6b9b6a7bfc186cb39'),
+    age: 1,
+    name: 'Test3',
+    weight: 73,
+    __v: 0
+  },
+  {
+    _id: new ObjectId('63a335a6b9b6a7bfc186cb33'),
+    age: 2,
+    name: 'Test0',
+    weight: 65,
+    __v: 0
+  },
+  {
+    _id: new ObjectId('63a335a6b9b6a7bfc186cb3b'),
+    age: 2,
+    name: 'Test4',
+    weight: 62,
+    __v: 0
+  }
+];
+const schema = new Schema({
+  name: {
+    type: String,
+    required: true
   }
 });
-// getting-started.js
-const mongoose = require('mongoose');
+const Cat = db.model('Cat', schema);
 
-main().catch(err => console.log(err));
+// This cat has no name :(
+const cat = new Cat();
 
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/test');
-
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+let error;
+try {
+  await cat.save();
+} catch (err) {
+  error = err;
 }
-const kittySchema = new mongoose.Schema({
+
+assert.equal(error.errors['name'].message,
+  'Path `name` is required.');
+
+error = cat.validateSync();
+assert.equal(error.errors['name'].message,
+  'Path `name` is required.');
+  const breakfastSchema = new Schema({
+    eggs: {
+      type: Number,
+      min: [6, 'Too few eggs'],
+      max: 12
+    },
+    bacon: {
+      type: Number,
+      required: [true, 'Why no bacon?']
+    },
+    drink: {
+      type: String,
+      enum: ['Coffee', 'Tea'],
+      required: function() {
+        return this.bacon > 3;
+      }
+    }
+  });
+  const Breakfast = db.model('Breakfast', breakfastSchema);
+  
+  const badBreakfast = new Breakfast({
+    eggs: 2,
+    bacon: 0,
+    drink: 'Milk'
+  });
+  let error = badBreakfast.validateSync();
+  assert.equal(error.errors['eggs'].message,
+    'Too few eggs');
+  assert.ok(!error.errors['bacon']);
+  assert.equal(error.errors['drink'].message,
+    '`Milk` is not a valid enum value for path `drink`.');
+  
+  badBreakfast.bacon = 5;
+  badBreakfast.drink = null;
+  
+  error = badBreakfast.validateSync();
+  assert.equal(error.errors['drink'].message, 'Path `drink` is required.');
+  
+  badBreakfast.bacon = null;
+  error = badBreakfast.validateSync();
+  assert.equal(error.errors['bacon'].message, 'Why no bacon?');
+  const breakfastSchema = new Schema({
+    eggs: {
+      type: Number,
+      min: [6, 'Must be at least 6, got {VALUE}'],
+      max: 12
+    },
+    drink: {
+      type: String,
+      enum: {
+        values: ['Coffee', 'Tea'],
+        message: '{VALUE} is not supported'
+      }
+    }
+  });
+  const Breakfast = db.model('Breakfast', breakfastSchema);
+  
+  const badBreakfast = new Breakfast({
+    eggs: 2,
+    drink: 'Milk'
+  });
+  const error = badBreakfast.validateSync();
+  assert.equal(error.errors['eggs'].message,
+    'Must be at least 6, got 2');
+  assert.equal(error.errors['drink'].message, 'Milk is not supported');
+  const uniqueUsernameSchema = new Schema({
+    username: {
+      type: String,
+      unique: true
+    }
+  });
+  const U1 = db.model('U1', uniqueUsernameSchema);
+  const U2 = db.model('U2', uniqueUsernameSchema);
+  
+  const dup = [{ username: 'Val' }, { username: 'Val' }];
+  // Race condition! This may save successfully, depending on whether
+  // MongoDB built the index before writing the 2 docs.
+  U1.create(dup).
+    then(() => {
+    }).
+    catch(err => {
+    });
+  
+  // You need to wait for Mongoose to finish building the `unique`
+  // index before writing. You only need to build indexes once for
+  // a given collection, so you normally don't need to do this
+  // in production. But, if you drop the database between tests,
+  // you will need to use `init()` to wait for the index build to finish.
+  U2.init().
+    then(() => U2.create(dup)).
+    catch(error => {
+      // `U2.create()` will error, but will *not* be a mongoose validation error, it will be
+      // a duplicate key error.
+      // See: https://masteringjs.io/tutorials/mongoose/e11000-duplicate-key
+      assert.ok(error);
+      assert.ok(!error.errors);
+      assert.ok(error.message.indexOf('duplicate key error') !== -1);
+    });
+    const userSchema = new Schema({
+      phone: {
+        type: String,
+        validate: {
+          validator: function(v) {
+            return /\d{3}-\d{3}-\d{4}/.test(v);
+          },
+          message: props => `${props.value} is not a valid phone number!`
+        },
+        required: [true, 'User phone number required']
+      }
+    });
+    
+    const User = db.model('user', userSchema);
+    const user = new User();
+    let error;
+    
+    user.phone = '555.0123';
+    error = user.validateSync();
+    assert.equal(error.errors['phone'].message,
+      '555.0123 is not a valid phone number!');
+    
+    user.phone = '';
+    error = user.validateSync();
+    assert.equal(error.errors['phone'].message,
+      'User phone number required');
+    
+    user.phone = '201-555-0123';
+    // Validation succeeds! Phone number is defined
+    // and fits `DDD-DDD-DDDD`
+    error = user.validateSync();
+    assert.equal(error, null);
+    const userSchema = new Schema({
+      name: {
+        type: String,
+        // You can also make a validator async by returning a promise.
+        validate: () => Promise.reject(new Error('Oops!'))
+      },
+      email: {
+        type: String,
+        // There are two ways for an promise-based async validator to fail:
+        // 1) If the promise rejects, Mongoose assumes the validator failed with the given error.
+        // 2) If the promise resolves to `false`, Mongoose assumes the validator failed and creates an error with the given `message`.
+        validate: {
+          validator: () => Promise.resolve(false),
+          message: 'Email validation failed'
+        }
+      }
+    });
+    
+    const User = db.model('User', userSchema);
+    const user = new User();
+    
+    user.email = 'test@test.co';
+    user.name = 'test';
+    
+    let error;
+    try {
+      await user.validate();
+    } catch (err) {
+      error = err;
+    }
+    assert.ok(error);
+    assert.equal(error.errors['name'].message, 'Oops!');
+    assert.equal(error.errors['email'].message, 'Email validation failed');
+    const toySchema = new Schema({
+      color: String,
+      name: String
+    });
+    
+    const validator = function(value) {
+      return /red|white|gold/i.test(value);
+    };
+    toySchema.path('color').validate(validator,
+      'Color `{VALUE}` not valid', 'Invalid color');
+    toySchema.path('name').validate(function(v) {
+      if (v !== 'Turbo Man') {
+        throw new Error('Need to get a Turbo Man for Christmas');
+      }
+      return true;
+    }, 'Name `{VALUE}` is not valid');
+    
+    const Toy = db.model('Toy', toySchema);
+    
+    const toy = new Toy({ color: 'Green', name: 'Power Ranger' });
+    
+    let error;
+    try {
+      await toy.save();
+    } catch (err) {
+      error = err;
+    }
+    
+    // `error` is a ValidationError object
+    // `error.errors.color` is a ValidatorError object
+    assert.equal(error.errors.color.message, 'Color `Green` not valid');
+    assert.equal(error.errors.color.kind, 'Invalid color');
+    assert.equal(error.errors.color.path, 'color');
+    assert.equal(error.errors.color.value, 'Green');
+    
+    // If your validator throws an exception, mongoose will use the error
+    // message. If your validator returns `false`,
+    // mongoose will use the 'Name `Power Ranger` is not valid' message.
+    assert.equal(error.errors.name.message,
+      'Need to get a Turbo Man for Christmas');
+    assert.equal(error.errors.name.value, 'Power Ranger');
+    // If your validator threw an error, the `reason` property will contain
+    // the original error thrown, including the original stack trace.
+    assert.equal(error.errors.name.reason.message,
+      'Need to get a Turbo Man for Christmas');
+    
+    assert.equal(error.name, 'ValidationError');
+    const vehicleSchema = new mongoose.Schema({
+      numWheels: { type: Number, max: 18 }
+    });
+    const Vehicle = db.model('Vehicle', vehicleSchema);
+    
+    const doc = new Vehicle({ numWheels: 'not a number' });
+    const err = doc.validateSync();
+    
+    err.errors['numWheels'].name; // 'CastError'
+    // 'Cast to Number failed for value "not a number" at path "numWheels"'
+    err.errors['numWheels'].message;
+    const vehicleSchema = new mongoose.Schema({
+      numWheels: { type: Number, max: 18 }
+    });
+    const Vehicle = db.model('Vehicle', vehicleSchema);
+    
+    const doc = new Vehicle({ numWheels: 'not a number' });
+    const err = doc.validateSync();
+    
+    err.errors['numWheels'].name; // 'CastError'
+    // 'Cast to Number failed for value "not a number" at path "numWheels"'
+    err.errors['numWheels'].message;
+    const vehicleSchema = new mongoose.Schema({
+      numWheels: {
+        type: Number,
+        cast: [null, (value, path, model, kind) => `"${value}" is not a number`]
+      }
+    });
+    const Vehicle = db.model('Vehicle', vehicleSchema);
+    
+    const doc = new Vehicle({ numWheels: 'pie' });
+    const err = doc.validateSync();
+    
+    err.errors['numWheels'].name; // 'CastError'
+    // "pie" is not a number
+    err.errors['numWheels'].message;
+    // Add a custom validator to all strings
+mongoose.Schema.Types.String.set('validate', v => v == null || v > 0);
+
+const userSchema = new Schema({
+  name: String,
+  email: String
+});
+const User = db.model('User', userSchema);
+
+const user = new User({ name: '', email: '' });
+
+const err = await user.validate().then(() => null, err => err);
+err.errors['name']; // ValidatorError
+err.errors['email']; // ValidatorError
+let personSchema = new Schema({
+  name: {
+    first: String,
+    last: String
+  }
+});
+
+assert.throws(function() {
+  // This throws an error, because 'name' isn't a full fledged path
+  personSchema.path('name').required(true);
+}, /Cannot.*'required'/);
+
+// To make a nested object required, use a single nested schema
+const nameSchema = new Schema({
+  first: String,
+  last: String
+});
+
+personSchema = new Schema({
+  name: {
+    type: nameSchema,
+    required: true
+  }
+});
+
+const Person = db.model('Person', personSchema);
+
+const person = new Person();
+const error = person.validateSync();
+assert.ok(error.errors['name']);
+const toySchema = new Schema({
+  color: String,
+  name: String
+});
+
+const Toy = db.model('Toys', toySchema);
+
+Toy.schema.path('color').validate(function(value) {
+  return /red|green|blue/i.test(value);
+}, 'Invalid color');
+
+const opts = { runValidators: true };
+
+let error;
+try {
+  await Toy.updateOne({}, { color: 'not a color' }, opts);
+} catch (err) {
+  error = err;
+}
+
+assert.equal(error.errors.color.message, 'Invalid color');
+const toySchema = new Schema({
+  color: String,
+  name: String
+});
+
+toySchema.path('color').validate(function(value) {
+  // When running in `validate()` or `validateSync()`, the
+  // validator can access the document using `this`.
+  // When running with update validators, `this` is the Query,
+  // **not** the document being updated!
+  // Queries have a `get()` method that lets you get the
+  // updated value.
+  if (this.get('name') && this.get('name').toLowerCase().indexOf('red') !== -1) {
+    return value === 'red';
+  }
+  return true;
+});
+
+const Toy = db.model('ActionFigure', toySchema);
+
+const toy = new Toy({ color: 'green', name: 'Red Power Ranger' });
+// Validation failed: color: Validator failed for path `color` with value `green`
+let error = toy.validateSync();
+assert.ok(error.errors['color']);
+
+const update = { color: 'green', name: 'Red Power Ranger' };
+const opts = { runValidators: true };
+
+error = null;
+try {
+  await Toy.updateOne({}, update, opts);
+} catch (err) {
+  error = err;
+}
+// Validation failed: color: Validator failed for path `color` with value `green`
+assert.ok(error);
+const kittenSchema = new Schema({
+  name: { type: String, required: true },
+  age: Number
+});
+
+const Kitten = db.model('Kitten', kittenSchema);
+
+const update = { color: 'blue' };
+const opts = { runValidators: true };
+// Operation succeeds despite the fact that 'name' is not specified
+await Kitten.updateOne({}, update, opts);
+
+const unset = { $unset: { name: 1 } };
+// Operation fails because 'name' is required
+const err = await Kitten.updateOne({}, unset, opts).then(() => null, err => err);
+assert.ok(err);
+assert.ok(err.errors['name']);
+const testSchema = new Schema({
+  number: { type: Number, max: 0 },
+  arr: [{ message: { type: String, maxlength: 10 } }]
+});
+
+// Update validators won't check this, so you can still `$push` 2 elements
+// onto the array, so long as they don't have a `message` that's too long.
+testSchema.path('arr').validate(function(v) {
+  return v.length < 2;
+});
+
+const Test = db.model('Test', testSchema);
+
+let update = { $inc: { number: 1 } };
+const opts = { runValidators: true };
+
+// There will never be a validation error here
+await Test.updateOne({}, update, opts);
+
+// This will never error either even though the array will have at
+// least 2 elements.
+update = { $push: [{ message: 'hello' }, { message: 'world' }] };
+await Test.updateOne({}, update, opts);
+const childSchema = new mongoose.Schema({
+  name: String
+});
+
+const mainSchema = new mongoose.Schema({
+  child: [childSchema]
+});
+
+mainSchema.pre('findOneAndUpdate', function() {
+  console.log('Middleware on parent document'); // Will be executed
+});
+
+childSchema.pre('findOneAndUpdate', function() {
+  console.log('Middleware on subdocument'); // Will not be executed
+});
+const childSchema = new mongoose.Schema({
+  name: String
+});
+
+const mainSchema = new mongoose.Schema({
+  child: [childSchema]
+});
+
+mainSchema.pre('findOneAndUpdate', function() {
+  console.log('Middleware on parent document'); // Will be executed
+});
+
+childSchema.pre('findOneAndUpdate', function() {
+  console.log('Middleware on subdocument'); // Will not be executed
+});
+schema.pre('save', function() {
+  return doStuff().
+    then(() => doMoreStuff());
+});
+
+// Or, using async functions
+schema.pre('save', async function() {
+  await doStuff();
+  await doMoreStuff();
+});
+const schema = new Schema({ /* ... */ });
+schema.pre('save', function(next) {
+  if (foo()) {
+    console.log('calling next!');
+    // `return next();` will make sure the rest of this function doesn't run
+    /* return */ next();
+  }
+  // Unless you comment out the `return` above, 'after next' will print
+  console.log('after next');
+});
+schema.pre('save', function(next) {
+  const err = new Error('something went wrong');
+  // If you call `next()` with an argument, that argument is assumed to be
+  // an error.
+  next(err);
+});
+
+schema.pre('save', function() {
+  // You can also return a promise that rejects
+  return new Promise((resolve, reject) => {
+    reject(new Error('something went wrong'));
+  });
+});
+
+schema.pre('save', function() {
+  // You can also throw a synchronous error
+  throw new Error('something went wrong');
+});
+
+schema.pre('save', async function() {
+  await Promise.resolve();
+  // You can also throw an error in an `async` function
+  throw new Error('something went wrong');
+});
+
+// later...
+
+// Changes will not be persisted to MongoDB because a pre hook errored out
+myDoc.save(function(err) {
+  console.log(err.message); // something went wrong
+});
+schema.post('init', function(doc) {
+  console.log('%s has been initialized from the db', doc._id);
+});
+schema.post('validate', function(doc) {
+  console.log('%s has been validated (but not saved yet)', doc._id);
+});
+schema.post('save', function(doc) {
+  console.log('%s has been saved', doc._id);
+});
+schema.post('deleteOne', function(doc) {
+  console.log('%s has been deleted', doc._id);
+});
+// Takes 2 parameters: this is an asynchronous post hook
+schema.post('save', function(doc, next) {
+  setTimeout(function() {
+    console.log('post1');
+    // Kick off the second post hook
+    next();
+  }, 10);
+});
+
+// Will not execute until the first middleware calls `next()`
+schema.post('save', function(doc, next) {
+  console.log('post2');
+  next();
+});
+schema.post('save', async function(doc) {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  console.log('post1');
+  // If less than 2 parameters, no need to call `next()`
+});
+
+schema.post('save', async function(doc, next) {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  console.log('post1');
+  // If there's a `next` parameter, you need to call `next()`.
+  next();
+});
+const schema = new mongoose.Schema({ name: String });
+
+// Compile a model from the schema
+const User = mongoose.model('User', schema);
+
+// Mongoose will **not** call the middleware function, because
+// this middleware was defined after the model was compiled
+schema.pre('save', () => console.log('Hello from pre save'));
+
+const user = new User({ name: 'test' });
+user.save();
+const schema = new mongoose.Schema({ name: String });
+// Mongoose will call this middleware function, because this script adds
+// the middleware to the schema before compiling the model.
+schema.pre('save', () => console.log('Hello from pre save'));
+
+// Compile a model from the schema
+const User = mongoose.model('User', schema);
+
+const user = new User({ name: 'test' });
+user.save();
+const schema = new mongoose.Schema({ name: String });
+
+// Once you `require()` this file, you can no longer add any middleware
+// to this schema.
+module.exports = mongoose.model('User', schema);
+schema.pre('validate', function() {
+  console.log('this gets printed first');
+});
+schema.post('validate', function() {
+  console.log('this gets printed second');
+});
+schema.pre('save', function() {
+  console.log('this gets printed third');
+});
+schema.post('save', function() {
+  console.log('this gets printed fourth');
+});
+const userSchema = new Schema({ name: String, age: Number });
+userSchema.pre('findOneAndUpdate', function() {
+  console.log(this.getFilter()); // { name: 'John' }
+  console.log(this.getUpdate()); // { age: 30 }
+});
+const User = mongoose.model('User', userSchema);
+
+await User.findOneAndUpdate({ name: 'John' }, { $set: { age: 30 } });
+const userSchema = new Schema({ name: String, age: Number });
+userSchema.pre('save', function(next, options) {
+  options.validateModifiedOnly; // true
+
+  // Remember to call `next()` unless you're using an async function or returning a promise
+  next();
+});
+const User = mongoose.model('User', userSchema);
+
+const doc = new User({ name: 'John', age: 30 });
+await doc.save({ validateModifiedOnly: true });
+schema.pre('deleteOne', function() { console.log('Removing!'); });
+
+// Does **not** print "Removing!". Document middleware for `deleteOne` is not executed by default
+await doc.deleteOne();
+
+// Prints "Removing!"
+await Model.deleteOne();
+// Only document middleware
+schema.pre('deleteOne', { document: true, query: false }, function() {
+  console.log('Deleting doc!');
+});
+
+// Only query middleware. This will get called when you do `Model.deleteOne()`
+// but not `doc.deleteOne()`.
+schema.pre('deleteOne', { query: true, document: false }, function() {
+  console.log('Deleting!');
+  const schema = new mongoose.Schema({ name: String });
+schema.pre('validate', function() {
+  console.log('Document validate');
+});
+schema.pre('validate', { query: true, document: false }, function() {
+  console.log('Query validate');
+});
+const Test = mongoose.model('Test', schema);
+
+const doc = new Test({ name: 'foo' });
+
+// Prints "Document validate"
+await doc.validate();
+
+// Prints "Query validate"
+await Test.find().validate();
+schema.pre('find', function() {
+  console.log(this instanceof mongoose.Query); // true
+  this.start = Date.now();
+});
+
+schema.post('find', function(result) {
+  console.log(this instanceof mongoose.Query); // true
+  // prints returned documents
+  console.log('find() returned ' + JSON.stringify(result));
+  // prints number of milliseconds the query took
+  console.log('find() took ' + (Date.now() - this.start) + ' milliseconds');
+});
+schema.pre('updateOne', function() {
+  this.set({ updatedAt: new Date() });
+});
+schema.pre('findOneAndUpdate', async function() {
+  const docToUpdate = await this.model.findOne(this.getQuery());
+  console.log(docToUpdate); // The document that `findOneAndUpdate()` will modify
+});
+schema.pre('updateOne', { document: true, query: false }, function() {
+  console.log('Updating');
+});
+const Model = mongoose.model('Test', schema);
+
+const doc = new Model();
+await doc.updateOne({ $set: { name: 'test' } }); // Prints "Updating"
+
+// Doesn't print "Updating", because `Query#updateOne()` doesn't fire
+// document middleware.
+await Model.updateOne({}, { $set: { name: 'test' } });
+const schema = new Schema({
+  name: {
+    type: String,
+    // Will trigger a MongoServerError with code 11000 when
+    // you save a duplicate
+    unique: true
+  }
+});
+
+// Handler **must** take 3 parameters: the error that occurred, the document
+// in question, and the `next()` function
+schema.post('save', function(error, doc, next) {
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    next(new Error('There was a duplicate key error'));
+  } else {
+    next();
+  }
+});
+
+// Will trigger the `post('save')` error handler
+Person.create([{ name: 'Axl Rose' }, { name: 'Axl Rose' }]);
+// The same E11000 error can occur when you call `updateOne()`
+// This function **must** take 4 parameters.
+
+schema.post('updateOne', function(passRawResult, error, res, next) {
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    next(new Error('There was a duplicate key error'));
+  } else {
+    next(); // The `updateOne()` call will still error out.
+  }
+});
+
+const people = [{ name: 'Axl Rose' }, { name: 'Slash' }];
+await Person.create(people);
+
+// Throws "There was a duplicate key error"
+await Person.updateOne({ name: 'Slash' }, { $set: { name: 'Axl Rose' } });
+customerSchema.pre('aggregate', function() {
+  // Add a $match state to the beginning of each pipeline.
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+});
+[require:post init hooks.*success]
+[require:post init hooks.*error]
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const personSchema = Schema({
+  _id: Schema.Types.ObjectId,
+  name: String,
+  age: Number,
+  stories: [{ type: Schema.Types.ObjectId, ref: 'Story' }]
+});
+
+const storySchema = Schema({
+  author: { type: Schema.Types.ObjectId, ref: 'Person' },
+  title: String,
+  fans: [{ type: Schema.Types.ObjectId, ref: 'Person' }]
+});
+
+const Story = mongoose.model('Story', storySchema);
+const Person = mongoose.model('Person', personSchema);
+const author = new Person({
+  _id: new mongoose.Types.ObjectId(),
+  name: 'Ian Fleming',
+  age: 50
+});
+
+await author.save();
+
+const story1 = new Story({
+  title: 'Casino Royale',
+  author: author._id // assign the _id from the person
+});
+
+await story1.save();
+// that's it!
+const story = await Story.
+  findOne({ title: 'Casino Royale' }).
+  populate('author').
+  exec();
+// prints "The author is Ian Fleming"
+console.log('The author is %s', story.author.name);
+const story = await Story.findOne({ title: 'Casino Royale' });
+story.author = author;
+console.log(story.author.name); // prints "Ian Fleming"
+const fan1 = await Person.create({ name: 'Sean' });
+await Story.updateOne({ title: 'Casino Royale' }, { $push: { fans: { $each: [fan1._id] } } });
+
+const story = await Story.findOne({ title: 'Casino Royale' }).populate('fans');
+story.fans[0].name; // 'Sean'
+
+const fan2 = await Person.create({ name: 'George' });
+story.fans.push(fan2);
+story.fans[1].name; // 'George'
+
+story.fans.push({ name: 'Roger' });
+story.fans[2].name; // 'Roger'
+const fan4 = await Person.create({ name: 'Timothy' });
+story.fans.push(fan4._id); // Push the `_id`, not the full document
+
+story.fans[0].name; // undefined, `fans[0]` is now an ObjectId
+story.fans[0].toString() === fan1._id.toString(); // true
+story.populated('author'); // truthy
+
+story.depopulate('author'); // Make `author` not populated anymore
+story.populated('author'); // undefined
+story.populated('author'); // truthy
+story.author._id; // ObjectId
+
+story.depopulate('author'); // Make `author` not populated anymore
+story.populated('author'); // undefined
+
+story.author instanceof ObjectId; // true
+story.author._id; // ObjectId, because Mongoose adds a special getter
+await Person.deleteMany({ name: 'Ian Fleming' });
+
+const story = await Story.findOne({ title: 'Casino Royale' }).populate('author');
+story.author; // `null'
+const storySchema = Schema({
+  authors: [{ type: Schema.Types.ObjectId, ref: 'Person' }],
+  title: String
+});
+
+// Later
+
+const story = await Story.findOne({ title: 'Casino Royale' }).populate('authors');
+story.authors; // `[]`
+const story = await Story.
+  findOne({ title: /casino royale/i }).
+  populate('author', 'name').
+  exec(); // only return the Persons name
+// prints "The author is Ian Fleming"
+console.log('The author is %s', story.author.name);
+// prints "The authors age is null"
+console.log('The authors age is %s', story.author.age);
+await Story.
+  find({ /* ... */ }).
+  populate('fans').
+  populate('author').
+  exec();
+  // The 2nd `populate()` call below overwrites the first because they
+// both populate 'fans'.
+await Story.
+find().
+populate({ path: 'fans', select: 'name' }).
+populate({ path: 'fans', select: 'email' });
+// The above is equivalent to:
+await Story.find().populate({ path: 'fans', select: 'email' });
+await Story.
+  find().
+  populate({
+    path: 'fans',
+    match: { age: { $gte: 21 } },
+    // Explicitly exclude `_id`, see http://bit.ly/2aEfTdB
+    select: 'name -_id'
+  }).
+  exec();
+  const story = await Story.
+  findOne({ title: 'Casino Royale' }).
+  populate({ path: 'author', match: { name: { $ne: 'Ian Fleming' } } }).
+  exec();
+story.author; // `null`
+const story = await Story.
+  findOne({ 'author.name': 'Ian Fleming' }).
+  populate('author').
+  exec();
+story; // null
+const story = await Story.
+  findOne({ 'author.name': 'Ian Fleming' }).
+  populate('author').
+  exec();
+story; // null
+const stories = await Story.find().populate({
+  path: 'fans',
+  options: { limit: 2 }
+});
+
+stories[0].name; // 'Casino Royale'
+stories[0].fans.length; // 2
+
+// 2nd story has 0 fans!
+stories[1].name; // 'Live and Let Die'
+stories[1].fans.length; // 0
+const stories = await Story.find().populate({
+  path: 'fans',
+  // Special option that tells Mongoose to execute a separate query
+  // for each `story` to make sure we get 2 fans for each story.
+  perDocumentLimit: 2
+});
+
+stories[0].name; // 'Casino Royale'
+stories[0].fans.length; // 2
+
+stories[1].name; // 'Live and Let Die'
+stories[1].fans.length; // 2
+await story1.save();
+
+author.stories.push(story1);
+await author.save();
+const person = await Person.
+  findOne({ name: 'Ian Fleming' }).
+  populate('stories').
+  exec(); // only works if we pushed refs to children
+console.log(person);
+const stories = await Story.
+  find({ author: author._id }).
+  exec();
+console.log('The stories are an array: ', stories);
+const person = await Person.findOne({ name: 'Ian Fleming' });
+
+person.populated('stories'); // null
+
+// Call the `populate()` method on a document to populate a path.
+await person.populate('stories');
+
+person.populated('stories'); // Array of ObjectIds
+person.stories[0].name; // 'Casino Royale'
+await person.populate(['stories', 'fans']);
+person.populated('fans'); // Array of ObjectIds
+const userSchema = new Schema({
+  name: String,
+  friends: [{ type: ObjectId, ref: 'User' }]
+});
+const userSchema = new Schema({
+  name: String,
+  friends: [{ type: ObjectId, ref: 'User' }]
+});
+const db1 = mongoose.createConnection('mongodb://127.0.0.1:27000/db1');
+const db2 = mongoose.createConnection('mongodb://127.0.0.1:27001/db2');
+
+const conversationSchema = new Schema({ numMessages: Number });
+const Conversation = db2.model('Conversation', conversationSchema);
+
+const eventSchema = new Schema({
+  name: String,
+  conversation: {
+    type: ObjectId,
+    ref: Conversation // `ref` is a **Model class**, not a string
+  }
+});
+const Event = db1.model('Event', eventSchema);
+// Works
+const events = await Event.
+  find().
+  populate('conversation');
+  const events = await Event.
+  find().
+  // The `model` option specifies the model to use for populating.
+  populate({ path: 'conversation', model: Conversation });
+  const commentSchema = new Schema({
+    body: { type: String, required: true },
+    doc: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      // Instead of a hardcoded model name in `ref`, `refPath` means Mongoose
+      // will look at the `docModel` property to find the right model.
+      refPath: 'docModel'
+    },
+    docModel: {
+      type: String,
+      required: true,
+      enum: ['BlogPost', 'Product']
+    }
+  });
+  
+  const Product = mongoose.model('Product', new Schema({ name: String }));
+  const BlogPost = mongoose.model('BlogPost', new Schema({ title: String }));
+  const Comment = mongoose.model('Comment', commentSchema);
+  const book = await Product.create({ name: 'The Count of Monte Cristo' });
+const post = await BlogPost.create({ title: 'Top 10 French Novels' });
+
+const commentOnBook = await Comment.create({
+  body: 'Great read',
+  doc: book._id,
+  docModel: 'Product'
+});
+
+const commentOnPost = await Comment.create({
+  body: 'Very informative',
+  doc: post._id,
+  docModel: 'BlogPost'
+});
+
+// The below `populate()` works even though one comment references the
+// 'Product' collection and the other references the 'BlogPost' collection.
+const comments = await Comment.find().populate('doc').sort({ body: 1 });
+comments[0].doc.name; // "The Count of Monte Cristo"
+comments[1].doc.title; // "Top 10 French Novels"
+const commentSchema = new Schema({
+  body: { type: String, required: true },
+  product: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Product'
+  },
+  blogPost: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'BlogPost'
+  }
+});
+
+// ...
+
+// The below `populate()` is equivalent to the `refPath` approach, you
+// just need to make sure you `populate()` both `product` and `blogPost`.
+const comments = await Comment.find().
+  populate('product').
+  populate('blogPost').
+  sort({ body: 1 });
+comments[0].product.name; // "The Count of Monte Cristo"
+comments[1].blogPost.title; // "Top 10 French Novels"
+const commentSchema = new Schema({
+  body: { type: String, required: true },
+  product: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Product'
+  },
+  blogPost: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'BlogPost'
+  }
+});
+
+// ...
+
+// The below `populate()` is equivalent to the `refPath` approach, you
+// just need to make sure you `populate()` both `product` and `blogPost`.
+const comments = await Comment.find().
+  populate('product').
+  populate('blogPost').
+  sort({ body: 1 });
+comments[0].product.name; // "The Count of Monte Cristo"
+comments[1].blogPost.title; // "Top 10 French Novels"
+const commentSchema = new Schema({
+  body: { type: String, required: true },
+  commentType: {
+    type: String,
+    enum: ['comment', 'review']
+  },
+  entityId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    refPath: function () {
+      return this.commentType === 'review' ? this.reviewEntityModel : this.commentEntityModel; // 'this' refers to the document being populated
+    }
+  },
+  commentEntityModel: {
+    type: String,
+    required: true,
+    enum: ['BlogPost', 'Review']
+  },
+  reviewEntityModel: {
+    type: String,
+    required: true,
+    enum: ['Vendor', 'Product']
+  }
+});
+const commentSchema = new Schema({
+  body: { type: String, required: true },
+  verifiedBuyer: Boolean
+  doc: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: function() {
+      return this.verifiedBuyer ? 'Product' : 'BlogPost'; // 'this' refers to the document being populated
+    }
+  },
+});
+const AuthorSchema = new Schema({
+  name: String,
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BlogPost' }]
+});
+
+const BlogPostSchema = new Schema({
+  title: String,
+  comments: [{
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
+    content: String
+  }]
+});
+
+const Author = mongoose.model('Author', AuthorSchema, 'Author');
+const BlogPost = mongoose.model('BlogPost', BlogPostSchema, 'BlogPost');
+const AuthorSchema = new Schema({
+  name: String
+});
+
+const BlogPostSchema = new Schema({
+  title: String,
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
+  comments: [{
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
+    content: String
+  }]
+});
+// Specifying a virtual with a `ref` property is how you enable virtual
+// population
+AuthorSchema.virtual('posts', {
+  ref: 'BlogPost',
+  localField: '_id',
+  foreignField: 'author'
+});
+
+const Author = mongoose.model('Author', AuthorSchema, 'Author');
+const BlogPost = mongoose.model('BlogPost', BlogPostSchema, 'BlogPost');
+You can then populate() the author's posts as shown below.
+
+const author = await Author.findOne().populate('posts');
+
+author.posts[0].title; // Title of the first blog post
+const authorSchema = new Schema({ name: String }, {
+  toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+  toObject: { virtuals: true } // So `console.log()` and other functions that use `toObject()` include virtuals
+});
+let authors = await Author.
+  find({}).
+  // Won't work because the foreign field `author` is not selected
+  populate({ path: 'posts', select: 'title' }).
+  exec();
+
+authors = await Author.
+  find({}).
+  // Works, foreign field `author` is selected
+  populate({ path: 'posts', select: 'title author' }).
+  exec();
+  const PersonSchema = new Schema({
+    name: String,
+    band: String
+  });
+  
+  const BandSchema = new Schema({
     name: String
   });
-  const Kitten = mongoose.model('Kitten', kittySchema);
-  const silence = new Kitten({ name: 'Silence' });
-console.log(silence.name); // 'Silence'
-// NOTE: methods must be added to the schema before compiling it with mongoose.model()
-kittySchema.methods.speak = function speak() {
-    const greeting = this.name
-      ? 'Meow name is ' + this.name
-      : 'I don\'t have a name';
-    console.log(greeting);
-  };
+  BandSchema.virtual('numMembers', {
+    ref: 'Person', // The model to use
+    localField: 'name', // Find people where `localField`
+    foreignField: 'band', // is equal to `foreignField`
+    count: true // And only get the number of docs
+  });
   
-  const Kitten = mongoose.model('Kitten', kittySchema);
-  const fluffy = new Kitten({ name: 'fluffy' });
-fluffy.speak(); // "Meow name is fluffy"
-await fluffy.save();
-fluffy.speak();
-const kittens = await Kitten.find();
-console.log(kittens);
-await Kitten.find({ name: /^fluff/ });
+  // Later
+  const doc = await Band.findOne({ name: 'Motley Crue' }).
+    populate('numMembers');
+  doc.numMembers; // 2
+  // Same example as 'Populate Virtuals' section
+AuthorSchema.virtual('posts', {
+  ref: 'BlogPost',
+  localField: '_id',
+  foreignField: 'author',
+  match: { archived: false } // match option with basic query selector
+});
+
+const Author = mongoose.model('Author', AuthorSchema, 'Author');
+const BlogPost = mongoose.model('BlogPost', BlogPostSchema, 'BlogPost');
+
+// After population
+const author = await Author.findOne().populate('posts');
+
+author.posts; // Array of not `archived` posts
+AuthorSchema.virtual('posts', {
+  ref: 'BlogPost',
+  localField: '_id',
+  foreignField: 'author',
+  // Add an additional filter `{ tags: author.favoriteTags }` to the populate query
+  // Mongoose calls the `match` function with the document being populated as the
+  // first argument.
+  match: author => ({ tags: author.favoriteTags })
+});
+// Overwrite the `match` option specified in `AuthorSchema.virtual()` for this
+// single `populate()` call.
+await Author.findOne().populate({ path: posts, match: {} });
+await Author.findOne().populate({
+  path: posts,
+  // Add `isDeleted: false` to the virtual's default `match`, so the `match`
+  // option would be `{ tags: author.favoriteTags, isDeleted: false }`
+  match: (author, virtual) => ({
+    ...virtual.options.match(author),
+    isDeleted: false
+  })
+});
+const BandSchema = new Schema({
+  name: String,
+  members: {
+    type: Map,
+    of: {
+      type: 'ObjectId',
+      ref: 'Person'
+    }
+  }
+});
+const Band = mongoose.model('Band', bandSchema);
+const person1 = new Person({ name: 'Vince Neil' });
+const person2 = new Person({ name: 'Mick Mars' });
+
+const band = new Band({
+  name: 'Motley Crue',
+  members: {
+    singer: person1._id,
+    guitarist: person2._id
+  }
+});
+const band = await Band.findOne({ name: 'Motley Crue' }).populate('members.$*');
+
+band.members.get('singer'); // { _id: ..., name: 'Vince Neil' }
+const librarySchema = new Schema({
+  name: String,
+  books: {
+    type: Map,
+    of: new Schema({
+      title: String,
+      author: {
+        type: 'ObjectId',
+        ref: 'Person'
+      }
+    })
+  }
+});
+const Library = mongoose.model('Library', librarySchema);
+const libraries = await Library.find().populate('books.$*.author');
+// Always attach `populate()` to `find()` calls
+MySchema.pre('find', function() {
+  this.populate('user');
+});
+// Always `populate()` after `find()` calls. Useful if you want to selectively populate
+// based on the docs found.
+MySchema.post('find', async function(docs) {
+  for (const doc of docs) {
+    if (doc.isPublic) {
+      await doc.populate('user');
+    }
+  }
+});
+// `populate()` after saving. Useful for sending populated data back to the client in an
+// update API endpoint
+MySchema.post('save', function(doc, next) {
+  doc.populate('user').then(function() {
+    next();
+  });
+});
+const userSchema = new Schema({
+  email: String,
+  password: String,
+  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+});
+
+userSchema.pre('find', function(next) {
+  this.populate('followers following');
+  next();
+});
+
+const User = mongoose.model('User', userSchema);
+userSchema.pre('find', function(next) {
+  if (this.options._recursed) {
+    return next();
+  }
+  this.populate({ path: 'followers following', options: { _recursed: true } });
+  next();
+});
+// With `transform`
+doc = await Parent.findById(doc).populate([
+  {
+    path: 'child',
+    // If `doc` is null, use the original id instead
+    transform: (doc, id) => doc == null ? id : doc
+  }
+]);
+
+doc.child; // 634d1a5744efe65ae09142f9
+doc.children; // [ 634d1a67ac15090a0ca6c0ea, { _id: 634d1a4ddb804d17d95d1c7f, name: 'Luke', __v: 0 } ]
+let doc = await Parent.create({ children: [{ name: 'Luke' }, { name: 'Leia' }] });
+
+doc = await Parent.findById(doc).populate([{
+  path: 'children',
+  transform: doc => doc == null ? null : doc.name
+}]);
+
+doc.children; // ['Luke', 'Leia']
+const internationalizedStringSchema = new Schema({
+  en: String,
+  es: String
+});
+
+const ingredientSchema = new Schema({
+  // Instead of setting `name` to just a string, set `name` to a map
+  // of language codes to strings.
+  name: {
+    type: internationalizedStringSchema,
+    // When you access `name`, pull the document's locale
+    get: function(value) {
+      return value[this.$locals.language || 'en'];
+    }
+  }
+});
+
+const recipeSchema = new Schema({
+  ingredients: [{ type: mongoose.ObjectId, ref: 'Ingredient' }]
+});
+
+const Ingredient = mongoose.model('Ingredient', ingredientSchema);
+const Recipe = mongoose.model('Recipe', recipeSchema);
+// Create some sample data
+const { _id } = await Ingredient.create({
+  name: {
+    en: 'Eggs',
+    es: 'Huevos'
+  }
+});
+await Recipe.create({ ingredients: [_id] });
+
+// Populate with setting `$locals.language` for internationalization
+const language = 'es';
+const recipes = await Recipe.find().populate({
+  path: 'ingredients',
+  transform: function(doc) {
+    doc.$locals.language = language;
+    return doc;
+  }
+});
+
+// Gets the ingredient's name in Spanish `name.es`
+recipes[0].ingredients[0].name; // 'Huevos'
+const options = { discriminatorKey: 'kind' };
+
+const eventSchema = new mongoose.Schema({ time: Date }, options);
+const Event = mongoose.model('Event', eventSchema);
+
+// ClickedLinkEvent is a special type of Event that has
+// a URL.
+const ClickedLinkEvent = Event.discriminator('ClickedLink',
+  new mongoose.Schema({ url: String }, options));
+
+// When you create a generic event, it can't have a URL field...
+const genericEvent = new Event({ time: Date.now(), url: 'google.com' });
+assert.ok(!genericEvent.url);
+
+// But a ClickedLinkEvent can
+const clickedEvent = new ClickedLinkEvent({ time: Date.now(), url: 'google.com' });
+assert.ok(clickedEvent.url);
+const event1 = new Event({ time: Date.now() });
+const event2 = new ClickedLinkEvent({ time: Date.now(), url: 'google.com' });
+const event3 = new SignedUpEvent({ time: Date.now(), user: 'testuser' });
+
+
+await Promise.all([event1.save(), event2.save(), event3.save()]);
+const count = await Event.countDocuments();
+assert.equal(count, 3);
+const event1 = new Event({ time: Date.now() });
+const event2 = new ClickedLinkEvent({ time: Date.now(), url: 'google.com' });
+const event3 = new SignedUpEvent({ time: Date.now(), user: 'testuser' });
+
+assert.ok(!event1.__t);
+assert.equal(event2.__t, 'ClickedLink');
+assert.equal(event3.__t, 'SignedUp');
+let event = new ClickedLinkEvent({ time: Date.now(), url: 'google.com' });
+await event.save();
+
+event.__t = 'SignedUp';
+// ValidationError: ClickedLink validation failed: __t: Cast to String failed for value "SignedUp" (type string) at path "__t"
+  await event.save();
+
+event = await ClickedLinkEvent.findByIdAndUpdate(event._id, { __t: 'SignedUp' }, { new: true });
+event.__t; // 'ClickedLink', update was a no-op
+let event = new ClickedLinkEvent({ time: Date.now(), url: 'google.com' });
+await event.save();
+
+event = await ClickedLinkEvent.findByIdAndUpdate(
+  event._id,
+  { __t: 'SignedUp' },
+  { overwriteDiscriminatorKey: true, new: true }
+);
+event.__t; // 'SignedUp', updated discriminator key
+const eventSchema = new Schema({ message: String },
+  { discriminatorKey: 'kind', _id: false });
+
+const batchSchema = new Schema({ events: [eventSchema] });
+
+// `batchSchema.path('events')` gets the mongoose `DocumentArray`
+// For TypeScript, use `schema.path<Schema.Types.DocumentArray>('events')`
+const docArray = batchSchema.path('events');
+
+// The `events` array can contain 2 different types of events, a
+// 'clicked' event that requires an element id that was clicked...
+const clickedSchema = new Schema({
+  element: {
+    type: String,
+    required: true
+  }
+}, { _id: false });
+// Make sure to attach any hooks to `eventSchema` and `clickedSchema`
+// **before** calling `discriminator()`.
+const Clicked = docArray.discriminator('Clicked', clickedSchema);
+
+// ... and a 'purchased' event that requires the product that was purchased.
+const Purchased = docArray.discriminator('Purchased', new Schema({
+  product: {
+    type: String,
+    required: true
+  }
+}, { _id: false }));
+
+const Batch = db.model('EventBatch', batchSchema);
+
+// Create a new batch of events with different kinds
+const doc = await Batch.create({
+  events: [
+    { kind: 'Clicked', element: '#hero', message: 'hello' },
+    { kind: 'Purchased', product: 'action-figure-1', message: 'world' }
+  ]
+});
+
+assert.equal(doc.events.length, 2);
+
+assert.equal(doc.events[0].element, '#hero');
+assert.equal(doc.events[0].message, 'hello');
+assert.ok(doc.events[0] instanceof Clicked);
+
+assert.equal(doc.events[1].product, 'action-figure-1');
+assert.equal(doc.events[1].message, 'world');
+assert.ok(doc.events[1] instanceof Purchased);
+
+doc.events.push({ kind: 'Purchased', product: 'action-figure-2' });
+
+await doc.save();
+
+assert.equal(doc.events.length, 3);
+
+assert.equal(doc.events[2].product, 'action-figure-2');
+assert.ok(doc.events[2] instanceof Purchased);
+const shapeSchema = Schema({ name: String }, { discriminatorKey: 'kind' });
+const schema = Schema({ shape: shapeSchema });
+
+// For TypeScript, use `schema.path<Schema.Types.Subdocument>('shape').discriminator(...)`
+schema.path('shape').discriminator('Circle', Schema({ radius: String }));
+schema.path('shape').discriminator('Square', Schema({ side: Number }));
+
+const MyModel = mongoose.model('ShapeTest', schema);
+
+// If `kind` is set to 'Circle', then `shape` will have a `radius` property
+let doc = new MyModel({ shape: { kind: 'Circle', radius: 5 } });
+doc.shape.radius; // 5
+
+// If `kind` is set to 'Square', then `shape` will have a `side` property
+doc = new MyModel({ shape: { kind: 'Square', side: 10 } });
+doc.shape.side; // 10
+// loadedAt.js
+module.exports = function loadedAtPlugin(schema, options) {
+  schema.virtual('loadedAt').
+    get(function() { return this._loadedAt; }).
+    set(function(v) { this._loadedAt = v; });
+
+  schema.post(['find', 'findOne'], function(docs) {
+    if (!Array.isArray(docs)) {
+      docs = [docs];
+    }
+    const now = new Date();
+    for (const doc of docs) {
+      doc.loadedAt = now;
+    }
+  });
+};
+
+// game-schema.js
+const loadedAtPlugin = require('./loadedAt');
+const gameSchema = new Schema({ /* ... */ });
+gameSchema.plugin(loadedAtPlugin);
+
+// player-schema.js
+const loadedAtPlugin = require('./loadedAt');
+const playerSchema = new Schema({ /* ... */ });
+playerSchema.plugin(loadedAtPlugin);
+const mongoose = require('mongoose');
+mongoose.plugin(require('./loadedAt'));
+
+const gameSchema = new Schema({ /* ... */ });
+const playerSchema = new Schema({ /* ... */ });
+// `loadedAtPlugin` gets attached to both schemas
+const Game = mongoose.model('Game', gameSchema);
+const Player = mongoose.model('Player', playerSchema);
+// loadedAt.js
+module.exports = function loadedAtPlugin(schema, options) {
+  schema.virtual('loadedAt').
+    get(function() { return this._loadedAt; }).
+    set(function(v) { this._loadedAt = v; });
+
+  schema.post(['find', 'findOne'], function(docs) {
+    if (!Array.isArray(docs)) {
+      docs = [docs];
+    }
+    const now = new Date();
+    for (const doc of docs) {
+      doc.loadedAt = now;
+    }
+  });
+};
+
+// game-schema.js
+const loadedAtPlugin = require('./loadedAt');
+const gameSchema = new Schema({ /* ... */ });
+const Game = mongoose.model('Game', gameSchema);
+
+// `find()` and `findOne()` hooks from `loadedAtPlugin()` won't get applied
+// because `mongoose.model()` was already called!
+gameSchema.plugin(loadedAtPlugin);
+const userSchema = new Schema({ name: String }, { timestamps: true });
+const User = mongoose.model('User', userSchema);
+
+let doc = await User.create({ name: 'test' });
+
+console.log(doc.createdAt); // 2022-02-26T16:37:48.244Z
+console.log(doc.updatedAt); // 2022-02-26T16:37:48.244Z
+
+doc.name = 'test2';
+await doc.save();
+console.log(doc.createdAt); // 2022-02-26T16:37:48.244Z
+console.log(doc.updatedAt); // 2022-02-26T16:37:48.307Z
+
+doc = await User.findOneAndUpdate({ _id: doc._id }, { name: 'test3' }, { new: true });
+console.log(doc.createdAt); // 2022-02-26T16:37:48.244Z
+console.log(doc.updatedAt); // 2022-02-26T16:37:48.366Z
+let doc = await User.create({ name: 'test' });
+
+console.log(doc.createdAt); // 2022-02-26T17:08:13.930Z
+console.log(doc.updatedAt); // 2022-02-26T17:08:13.930Z
+
+doc.name = 'test2';
+doc.createdAt = new Date(0);
+doc.updatedAt = new Date(0);
+await doc.save();
+
+// Mongoose blocked changing `createdAt` and set its own `updatedAt`, ignoring
+// the attempt to manually set them.
+console.log(doc.createdAt); // 2022-02-26T17:08:13.930Z
+console.log(doc.updatedAt); // 2022-02-26T17:08:13.991Z
+
+// Mongoose also blocks changing `createdAt` and sets its own `updatedAt`
+// on `findOneAndUpdate()`, `updateMany()`, and other query operations
+// **except** `replaceOne()` and `findOneAndReplace()`.
+doc = await User.findOneAndUpdate(
+  { _id: doc._id },
+  { name: 'test3', createdAt: new Date(0), updatedAt: new Date(0) },
+  { new: true }
+);
+console.log(doc.createdAt); // 2022-02-26T17:08:13.930Z
+console.log(doc.updatedAt); // 2022-02-26T17:08:14.008Z
+// `findOneAndReplace()` and `replaceOne()` without timestamps specified in `replacement`
+// sets `createdAt` and `updatedAt` to current time.
+doc = await User.findOneAndReplace(
+  { _id: doc._id },
+  { name: 'test3' },
+  { new: true }
+);
+console.log(doc.createdAt); // 2022-02-26T17:08:14.008Z
+console.log(doc.updatedAt); // 2022-02-26T17:08:14.008Z
+
+// `findOneAndReplace()` and `replaceOne()` with timestamps specified in `replacement`
+// sets `createdAt` and `updatedAt` to the values in `replacement`.
+doc = await User.findOneAndReplace(
+  { _id: doc._id },
+  {
+    name: 'test3',
+    createdAt: new Date('2022-06-01'),
+    updatedAt: new Date('2022-06-01')
+  },
+  { new: true }
+);
+console.log(doc.createdAt); // 2022-06-01T00:00:00.000Z
+console.log(doc.updatedAt); // 2022-06-01T00:00:00.000Z
+const userSchema = new Schema({ name: String }, {
+  timestamps: {
+    createdAt: 'created_at', // Use `created_at` to store the created date
+    updatedAt: 'updated_at' // and `updated_at` to store the last updated date
+  }
+});
+let doc = await User.create({ name: 'test' });
+
+console.log(doc.createdAt); // 2022-02-26T23:28:54.264Z
+console.log(doc.updatedAt); // 2022-02-26T23:28:54.264Z
+
+doc.name = 'test2';
+
+// Setting `timestamps: false` tells Mongoose to skip updating `updatedAt` on this `save()`
+await doc.save({ timestamps: false });
+console.log(doc.updatedAt); // 2022-02-26T23:28:54.264Z
+
+// Similarly, setting `timestamps: false` on a query tells Mongoose to skip updating
+// `updatedAt`.
+doc = await User.findOneAndUpdate({ _id: doc._id }, { name: 'test3' }, {
+  new: true,
+  timestamps: false
+});
+console.log(doc.updatedAt); // 2022-02-26T23:28:54.264Z
+
+// Below is how you can disable timestamps on a `bulkWrite()`
+await User.bulkWrite([{
+  updateOne: {
+    filter: { _id: doc._id },
+    update: { name: 'test4' },
+    timestamps: false
+  }
+}]);
+doc = await User.findOne({ _id: doc._id });
+console.log(doc.updatedAt); // 2022-02-26T23:28:54.264Z
+const doc = new User({ name: 'test' });
+
+// Tell Mongoose to set `createdAt`, but skip `updatedAt`.
+await doc.save({ timestamps: { createdAt: true, updatedAt: false } });
+console.log(doc.createdAt); // 2022-02-26T23:32:12.478Z
+console.log(doc.updatedAt); // undefined
+let doc = await User.create({ name: 'test' });
+
+// To update `updatedAt`, do a `findOneAndUpdate()` with `timestamps: false` and
+// `updatedAt` set to the value you want
+doc = await User.findOneAndUpdate({ _id: doc._id }, { updatedAt: new Date(0) }, {
+  new: true,
+  timestamps: false
+});
+console.log(doc.updatedAt); // 1970-01-01T00:00:00.000Z
+
+// To update `createdAt`, you also need to set `strict: false` because `createdAt`
+// is immutable
+doc = await User.findOneAndUpdate({ _id: doc._id }, { createdAt: new Date(0) }, {
+  new: true,
+  timestamps: false,
+  strict: false
+});
+console.log(doc.createdAt); // 1970-01-01T00:00:00.000Z
+const roleSchema = new Schema({ value: String }, { timestamps: true });
+const userSchema = new Schema({ name: String, roles: [roleSchema] });
+
+const doc = await User.create({ name: 'test', roles: [{ value: 'admin' }] });
+console.log(doc.roles[0].createdAt); // 2022-02-27T00:22:53.836Z
+console.log(doc.roles[0].updatedAt); // 2022-02-27T00:22:53.836Z
+
+// Overwriting the subdocument also overwrites `createdAt` and `updatedAt`
+doc.roles[0] = { value: 'root' };
+await doc.save();
+console.log(doc.roles[0].createdAt); // 2022-02-27T00:22:53.902Z
+console.log(doc.roles[0].updatedAt); // 2022-02-27T00:22:53.902Z
+
+// But updating the subdocument preserves `createdAt` and updates `updatedAt`
+doc.roles[0].value = 'admin';
+await doc.save();
+console.log(doc.roles[0].createdAt); // 2022-02-27T00:22:53.902Z
+console.log(doc.roles[0].updatedAt); // 2022-02-27T00:22:53.909Z
+mongoose.set('debug', true);
+
+const userSchema = new Schema({
+  name: String
+}, { timestamps: true });
+const User = mongoose.model('User', userSchema);
+
+await User.findOneAndUpdate({}, { name: 'test' });
+await User.findOneAndUpdate({}, { $setOnInsert: { updatedAt: new Date() } }, {
+  timestamps: { createdAt: true, updatedAt: false }
+});
+const createdAt = new Date('2011-06-01');
+// Update a document's `createdAt` to a custom value.
+// Normally Mongoose would prevent doing this because `createdAt` is immutable.
+await Model.updateOne({ _id: doc._id }, { createdAt }, { overwriteImmutable: true, timestamps: false });
+
+doc = await Model.collection.findOne({ _id: doc._id });
+doc.createdAt.valueOf() === createdAt.valueOf(); // true
+// Using Mongoose's default connection
+const session = await mongoose.startSession();
+
+// Using custom connection
+const db = await mongoose.createConnection(mongodbUri).asPromise();
+const session = await db.startSession();
+let session = null;
+return Customer.createCollection().
+  then(() => Customer.startSession()).
+  // The `withTransaction()` function's first parameter is a function
+  // that returns a promise.
+  then(_session => {
+    session = _session;
+    return session.withTransaction(() => {
+      return Customer.create([{ name: 'Test' }], { session: session });
+    });
+  }).
+  then(() => Customer.countDocuments()).
+  then(count => assert.strictEqual(count, 1)).
+  then(() => session.endSession());
+  const doc = new Person({ name: 'Will Riker' });
+
+await db.transaction(async function setRank(session) {
+  doc.name = 'Captain';
+  await doc.save({ session });
+  doc.isNew; // false
+
+  // Throw an error to abort the transaction
+  throw new Error('Oops!');
+}, { readPreference: 'primary' }).catch(() => {});
+
+// true, `transaction()` reset the document's state because the
+// transaction was aborted.
+doc.isNew;
+const User = db.model('User', new Schema({ name: String }));
+
+let session = null;
+return User.createCollection().
+  then(() => db.startSession()).
+  then(_session => {
+    session = _session;
+    return User.create({ name: 'foo' });
+  }).
+  then(() => {
+    session.startTransaction();
+    return User.findOne({ name: 'foo' }).session(session);
+  }).
+  then(user => {
+    // Getter/setter for the session associated with this document.
+    assert.ok(user.$session());
+    user.name = 'bar';
+    // By default, `save()` uses the associated session
+    return user.save();
+  }).
+  then(() => User.findOne({ name: 'bar' })).
+  // Won't find the doc because `save()` is part of an uncommitted transaction
+  then(doc => assert.ok(!doc)).
+  then(() => session.commitTransaction()).
+  then(() => session.endSession()).
+  then(() => User.findOne({ name: 'bar' })).
+  then(doc => assert.ok(doc));
+  const Event = db.model('Event', new Schema({ createdAt: Date }), 'Event');
+
+let session = null;
+return Event.createCollection().
+  then(() => db.startSession()).
+  then(_session => {
+    session = _session;
+    session.startTransaction();
+    return Event.insertMany([
+      { createdAt: new Date('2018-06-01') },
+      { createdAt: new Date('2018-06-02') },
+      { createdAt: new Date('2017-06-01') },
+      { createdAt: new Date('2017-05-31') }
+    ], { session: session });
+  }).
+  then(() => Event.aggregate([
+    {
+      $group: {
+        _id: {
+          month: { $month: '$createdAt' },
+          year: { $year: '$createdAt' }
+        },
+        count: { $sum: 1 }
+      }
+    },
+    { $sort: { count: -1, '_id.year': -1, '_id.month': -1 } }
+  ]).session(session)).
+  then(res => assert.deepEqual(res, [
+    { _id: { month: 6, year: 2018 }, count: 2 },
+    { _id: { month: 6, year: 2017 }, count: 1 },
+    { _id: { month: 5, year: 2017 }, count: 1 }
+  ])).
+  then(() => session.commitTransaction()).
+  then(() => session.endSession());
+  mongoose.set('transactionAsyncLocalStorage', true);
+
+const Test = mongoose.model('Test', mongoose.Schema({ name: String }));
+
+const doc = new Test({ name: 'test' });
+
+// Save a new doc in a transaction that aborts
+await connection.transaction(async() => {
+  await doc.save(); // Notice no session here
+  throw new Error('Oops');
+}).catch(() => {});
+
+// false, `save()` was rolled back
+await Test.exists({ _id: doc._id });
+const Customer = db.model('Customer', new Schema({ name: String }));
+
+let session = null;
+return Customer.createCollection().
+  then(() => db.startSession()).
+  then(_session => {
+    session = _session;
+    // Start a transaction
+    session.startTransaction();
+    // This `create()` is part of the transaction because of the `session`
+    // option.
+    return Customer.create([{ name: 'Test' }], { session: session });
+  }).
+  // Transactions execute in isolation, so unless you pass a `session`
+  // to `findOne()` you won't see the document until the transaction
+  // is committed.
+  then(() => Customer.findOne({ name: 'Test' })).
+  then(doc => assert.ok(!doc)).
+  // This `findOne()` will return the doc, because passing the `session`
+  // means this `findOne()` will run as part of the transaction.
+  then(() => Customer.findOne({ name: 'Test' }).session(session)).
+  then(doc => assert.ok(doc)).
+  // Once the transaction is committed, the write operation becomes
+  // visible outside of the transaction.
+  then(() => session.commitTransaction()).
+  then(() => Customer.findOne({ name: 'Test' })).
+  then(doc => assert.ok(doc)).
+  then(() => session.endSession());
+  let session = null;
+return Customer.createCollection().
+  then(() => Customer.startSession()).
+  then(_session => {
+    session = _session;
+    session.startTransaction();
+    return Customer.create([{ name: 'Test' }], { session: session });
+  }).
+  then(() => Customer.create([{ name: 'Test2' }], { session: session })).
+  then(() => session.abortTransaction()).
+  then(() => Customer.countDocuments()).
+  then(count => assert.strictEqual(count, 0)).
+  then(() => session.endSession());

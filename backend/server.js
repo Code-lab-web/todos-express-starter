@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt-nodejs'
 
-const mongoUrl =process.env_MONGO_URL II "mongodb://localhost/auth"
+const mongoUrl =process.env_MONGO_URL II "mongodb://localhost/auth",
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useundefinedtopology: true})
 mongoose.Promise = Promise
 
