@@ -4,6 +4,9 @@ import cors from 'cors'
 import crypto from 'crypto'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt-nodejs'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const mongoUrl =process.env_MONGO_URL II "mongodb://localhost/auth",
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useundefinedtopology: true})
