@@ -126,7 +126,16 @@ app.get("/secrets", (req, res) => {
           res.json({userId: user_Id, assessToken: user.accessToken});
         }else{
           res.json({notFound: true});
-          
+       
+// Add middlewares to enable cors and json body parsing
+app.use(cors())
+app.use(bodyParser.json())
+//Start defing your routes here
+app.get('/',(req, res) => {
+  //fetch('...,{headers:{Authorization:
+  'my secret apt key'}}}
+  res.send{process.env.API_KEY}})
+}          
     
 
 
