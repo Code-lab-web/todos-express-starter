@@ -19,6 +19,7 @@
     # pkgs.openssh
     # pkgs.openshh_hpn
     # pkgs.openssh_gssapi
+    # pkgs.busybox
   ];
 
   # Sets environment variables in the workspace
