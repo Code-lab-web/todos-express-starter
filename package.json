@@ -16,6 +16,8 @@
     "leaflet": "^1.9.4",
     "mongodb": "^6.17.0",
     "node.js": "^0.0.1-security",
-    "openlayers": "^3.17.1"
+    "openlayers": "^3.17.1",
+    "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0"
   }
 }
