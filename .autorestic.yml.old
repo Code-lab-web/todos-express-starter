@@ -1,0 +1,21 @@
+
+version: 2
+locations:
+  home:
+    from: /
+    to: local
+    options:
+      backup:
+        exclude:
+          - /dev
+          - /proc
+          - /sys
+          - /tmp
+          - /run
+          - /mnt
+          - /media
+          - /lost+found
+backends:
+  local:
+    type: local
+    path: /tmp/autorestic-test
