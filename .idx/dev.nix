@@ -20,6 +20,7 @@
     # pkgs.openshh_hpn
     # pkgs.openssh_gssapi
     # pkgs.busybox
+    # pkgs.speech-tools
   ];
 
   # Sets environment variables in the workspace
