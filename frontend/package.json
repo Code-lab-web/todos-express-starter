@@ -1,5 +1,5 @@
 {
-  "name": "project-final-backend",
+  "name": "project-final-frontend",
   "description": "Client part of final project",
   "version": "1.0.0",
   "type": "module",
@@ -8,12 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "jest",
-    "start": "babel-node server.js",
-    "dev": "nodemon server.js --exec babel-node"
-
-  },
-
+    "test": "jest"
   },
   "dependencies": {
     "react": "^18.2.0",
