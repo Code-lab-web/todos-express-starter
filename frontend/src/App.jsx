@@ -4,11 +4,11 @@ import UserSettings from "./components/UserSettings"
 export const App = () => {
 
   return (
-    <>
-      <h1>State-Management-Zustand-Welcome to Final Project-Special Garden Group!</h1>
+    <main>
+      <h1>Welcome to the Special Garden Group!</h1>
       <Home/>
       <UserInfo/>
       <UserSettings/>
-    </>
+    </main>
   );
 };
