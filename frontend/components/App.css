@@ -1,5 +1,25 @@
 @import "tailwindcss";
+
 .img{
     width: 100%;
     height: 5rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .img {
+    height: 4rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .img {
+    height: 6rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .img {
+    height: 8rem;
+  }
 }
