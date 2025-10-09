@@ -1,3 +1,3 @@
-module.exports = {
-    transform: {},
-};
+"transform": {
+  "^.+\\.jsx?$": "./path/to/wrapper.js"
+},
