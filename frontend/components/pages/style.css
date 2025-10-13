@@ -1,68 +1,68 @@
-@import "tailwindcss";
-Input {
-    font-size: 20px;
+
+    input {
+        font-size: 20px;
     }
     
     input:valid{
-    background-color: green;
+        background-color: green;
     
     }
     input:invalid{
-    background-color: red;
+        background-color: red;
     }
     
     label{
-    display: block;
-    margin-bottom: 20px;
+        display: block;
+        margin-bottom: 20px;
     }
     body{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-    background: #f8fbfd;
-    color: #525f7f;
-    padding: 40px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        background: #f8fbfd;
+        color: #525f7f;
+        padding: 40px;
     }
     *{
-    box-sizing: border-box;
+        box-sizing: border-box;
     }
     form{
-    border: 1px solid #e8e8fb;
-    border-radius: 4px;
-    padding: 20px;
-    max-width: 100%;
+        border: 1px solid #e8e8fb;
+        border-radius: 4px;
+        padding: 20px;
+        max-width: 100%;
     }
     h2{
-    text-transform: uppercase;
-    font-size: 15px;
-    margin-top: 0;
+        text-transform: uppercase;
+        font-size: 15px;
+        margin-top: 0;
     } 
     fieldset{
-    border: none;
-    padding: 0;
-    background: white;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px 0 rgba(50, 50, 93, 0.15), 0 4px 6px 0 rgba(112, 157, 199, 0.15);
+        border: none;
+        padding: 0;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px 0 rgba(50, 50, 93, 0.15), 0 4px 6px 0 rgba(112, 157, 199, 0.15);
     }
     label{
-    display: flex;
-    border-bottom: 1px solid #f0f5fa;
-    align-items: center;
+        display: flex;
+        border-bottom: 1px solid #f0f5fa;
+        align-items: center;
     }
     label:last-child{
-    border-bottom: none;
+        border-bottom: none;
     }
     span{
-    width: 30%;
-    text-align: right;
-    margin-right: 15px;
-    flex-shrink: 0;
+        width: 30%;
+        text-align: right;
+        margin-right: 15px;
+        flex-shrink: 0;
     }
     input{
-    width: 100%;
-    font-size: 15px;
-    padding: 5px 0;
-    appearance: none;
-    border: none;
-    outline: none;
+        width: 100%;
+        font-size: 15px;
+        padding: 5px 0;
+        appearance: none;
+        border: none;
+        outline: none;
     }
     select {
         width: 100%;
@@ -194,4 +194,3 @@ Input {
     .radiobutton-container input:checked ~ .custom-radio {
         background-color: #444444;
     }
-    
