@@ -11,8 +11,6 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var logger = require('morgan');
 var db = require('./db');
 
-var session = require('express-session');
-var passport = require('passport');
 var indexRouter = require('./routes/index');
 
 // Passport configuration
@@ -102,13 +100,7 @@ app.get('/oauth2/redirect/facebook',
 app.use(function(req, res, next) {
   next(createError(404));
 });
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false,
-  store: new SQLiteStore({ db: 'sessions.db', dir: './var/db' })
-}));
-app.use(passport.authenticate('session'));
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
