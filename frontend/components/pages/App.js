@@ -10,6 +10,21 @@ import SearchAppBar from './AppBar';
 import gardens from "./data.json";
 import './App.css';
 
+var logger = require('morgan');
+var session = require('express-session');
+
+var SQLiteStore = require('connect-sqlite3')(session);
+var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
+app.use('/', indexRouter);
+app.use('/', authRouter);
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  store: new SQLiteStore({ db: 'sessions.db', dir: './var/db' })
+}));
 
 function App() {
     return (
