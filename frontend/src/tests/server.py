@@ -24,8 +24,8 @@ def threaded_client(connection):
     name = connection.recv(2048)
     connection.send(str.encode('ENTER PASSWORD : ')) # Request Password
     password = connection.recv(2048)
-    password = password.decode()
-    name = name.decode()
+    password = password.decode().strip()
+    name = name.decode().strip()
     password=hashlib.sha256(str.encode(password)).hexdigest() # Password hash using SHA256
 # REGISTERATION PHASE   
 # If new user,  regiter in Hashtable Dictionary  

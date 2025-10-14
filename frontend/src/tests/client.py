@@ -10,11 +10,11 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 1233))
 response = client.recv(2048)
 # Input UserName
-name = input(response.decode())	
+name = input(response.decode()).strip()
 client.send(str.encode(name))
 response = client.recv(2048)
 # Input Password
-password = input(response.decode())	
+password = input(response.decode()).strip()
 client.send(str.encode(password))
 ''' Response : Status of Connection :
 	1 : Registeration successful 
