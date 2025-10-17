@@ -3,6 +3,8 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook');
 var db = require('../db');
 
+var router = express.Router();
+
 passport.use(new FacebookStrategy({
   clientID: process.env['FACEBOOK_CLIENT_ID'],
   clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
@@ -55,8 +57,6 @@ passport.deserializeUser(function(user, cb) {
     return cb(null, user);
   });
 });
-
-var router = express.Router();
 
 router.get('/login', function(req, res, next) {
   res.render('login');
