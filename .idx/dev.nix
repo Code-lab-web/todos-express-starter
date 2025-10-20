@@ -17,7 +17,7 @@
     # pkgs.sudo-rs
     # pkgs.doas-sudo-shim
     # pkgs.python312Packages.pip
-    # pkgs.openssh
+    pkgs.openssh
     # pkgs.openshh_hpn
     # pkgs.openssh_gssapi
     # pkgs.busybox
