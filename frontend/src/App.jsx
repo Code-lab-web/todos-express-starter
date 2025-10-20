@@ -1,14 +1,15 @@
-import Home from "./components/Home"
-import UserInfo from "./components/UserInfo"
-import UserSettings from "./components/UserSettings"
-export const App = () => {
+import { Routes, Route } from 'react-router-dom';
+import Home from './components/Home';
+import Dashboard from './components/Dashboard'; // Assuming you will create this file
+
+const App = () => {
 
   return (
-    <main>
-      <h1>Welcome to the Special Garden Group!</h1>
-      <Home/>
-      <UserInfo/>
-      <UserSettings/>
-    </main>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
   );
 };
+
+export default App;
