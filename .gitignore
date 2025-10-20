@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules
 .DS_Store
 .env
@@ -15,3 +16,14 @@ yarn-error.log*
 package-lock.json
 # Local Netlify folder
 .netlify
+=======
+.env
+var
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Mac OS X
+.DS_Store
+>>>>>>> cb8c9927541c8285a805a353176c721213a896a9

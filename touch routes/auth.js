@@ -1,4 +1,5 @@
 var express = require('express');
+<<<<<<< HEAD
 var express = require('express');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook');
@@ -57,6 +58,13 @@ var session = require('express-session');
 var passport = require('passport');
 var db = require('../db');
 var router = express.Router();
+=======
+<<<<<<< HEAD
+var express = require('express');
+var passport = require('passport');
+var FacebookStrategy = require('passport-facebook');
+var db = require('../db');
+>>>>>>> cb8c9927541c8285a805a353176c721213a896a9
 passport.use(new FacebookStrategy({
   clientID: process.env['FACEBOOK_CLIENT_ID'],
   clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
@@ -64,10 +72,13 @@ passport.use(new FacebookStrategy({
   state: true
 }, function verify(accessToken, refreshToken, profile, cb) {
   db.get('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', [
+<<<<<<< HEAD
     router.get('/oauth2/redirect/facebook', passport.authenticate('facebook', {
       successRedirect: '/',
       failureRedirect: '/login'
     }));
+=======
+>>>>>>> cb8c9927541c8285a805a353176c721213a896a9
     'https://www.facebook.com',
     profile.id
   ], function(err, row) {
@@ -100,6 +111,7 @@ passport.use(new FacebookStrategy({
       });
     }
   });
+<<<<<<< HEAD
   passport.serializeUser(function(user, cb) {
     process.nextTick(function() {
       cb(null, { id: user.id, username: user.username, name: user.name });
@@ -112,6 +124,21 @@ passport.use(new FacebookStrategy({
     });
   });
 }));
+=======
+}));
+var router = express.Router();
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    cb(null, { id: user.id, username: user.username, name: user.name });
+  });
+});
+
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user);
+  });
+});
+>>>>>>> cb8c9927541c8285a805a353176c721213a896a9
 router.get('/login', function(req, res, next) {
   res.render('login');
 });
@@ -126,4 +153,16 @@ router.post('/logout', function(req, res, next) {
     res.redirect('/');
   });
 });
+<<<<<<< HEAD
+=======
+=======
+
+var router = express.Router();
+
+router.get('/login', function(req, res, next) {
+  res.render('login');
+});
+>>>>>>> 3d4ec6b4521310319c212d465b58f000b856666b
+
+>>>>>>> cb8c9927541c8285a805a353176c721213a896a9
 module.exports = router;
