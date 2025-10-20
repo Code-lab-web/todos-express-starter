@@ -1,8 +1,10 @@
 var express = require('express');
-var express = require('express');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook');
 var db = require('../db');
+
+var router = express.Router();
+
 passport.use(new FacebookStrategy({
   clientID: process.env['FACEBOOK_CLIENT_ID'],
   clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
@@ -43,7 +45,7 @@ passport.use(new FacebookStrategy({
     }
   });
 }));
-var router = express.Router();
+
 passport.serializeUser(function(user, cb) {
   process.nextTick(function() {
     cb(null, { id: user.id, username: user.username, name: user.name });
@@ -55,14 +57,18 @@ passport.deserializeUser(function(user, cb) {
     return cb(null, user);
   });
 });
+
 router.get('/login', function(req, res, next) {
   res.render('login');
 });
+
 router.get('/login/federated/facebook', passport.authenticate('facebook'));
+
 router.get('/oauth2/redirect/facebook', passport.authenticate('facebook', {
   successRedirect: '/',
   failureRedirect: '/login'
 }));
+
 router.post('/logout', function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
