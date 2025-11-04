@@ -17,11 +17,11 @@ response = client.recv(2048)
 password = input(response.decode()).strip()
 client.send(str.encode(password))
 ''' Response : Status of Connection :
-	1 : Registeration successful 
+	1 : Registeration successful
 	2 : Connection Successful
 	3 : Login Failed
 '''
-# Receive response 
+# Receive response
 response = client.recv(2048)
 response = response.decode()
 

@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # 30 min is the max walltime allowed in the Hopper Debug queue
     parser.add_option('-t', '--walltime', dest='walltime', type='int', default=29, help='pbs walltime')
     (options, args) = parser.parse_args()
-    
+
     # nclients, host must be given!
     if options.nclients is not None and options.host is not None:
         sys.exit(main(options.output_file, options.nclients, options.ndocs, options.host, options.port, options.walltime))

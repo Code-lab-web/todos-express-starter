@@ -23,10 +23,10 @@ def validate_password(password):
 @app.route('/signup', methods=['POST'])
 def sinup():
     data = request.get_json()
-    
+
     username = data.get('username')
     password = data.get('password')
-    
+
     if not username or not password:
         return jsonify({"error": "Username and password are required"}), 400
     if not validate_password(password):

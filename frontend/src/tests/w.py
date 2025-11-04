@@ -71,7 +71,7 @@ def report(conn, run, delta_time, **kw):
     coll = conn[REPORT_DB][REPORT_COLL]
     coll.insert(doc)
 
-def print_results(coll): 
+def print_results(coll):
     hdr = None
     for rec in coll.find():
         if not hdr:
@@ -87,7 +87,7 @@ def main():
 
     # command-line
     parser = OptionParser()
-    parser.add_option('-c', '--clear', dest='do_clear', help='Clear collection first', 
+    parser.add_option('-c', '--clear', dest='do_clear', help='Clear collection first',
                       action="store_true", default=False)
     parser.add_option('-d', '--ndocs', dest='ndocs', metavar="NUM", type='int', default= 1000,
                       help='Insert NUM docs per client (default=%default)')
