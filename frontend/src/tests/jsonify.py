@@ -16,7 +16,7 @@ def validate_password(password):
         not re.search(r"[A-Z]", password) or
         not re.search(r"[a-z]", password) or
         not re.search(r"[0-9]", password) or
-        not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)):
+        not re.search(r"[!@#$%^&*(),.?\\\":{}|<>]", password)):
         return False
     return True
 
@@ -37,4 +37,4 @@ def sinup():
     return jsonify({"message": "User signed up succesfully"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
